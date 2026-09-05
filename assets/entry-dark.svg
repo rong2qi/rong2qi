@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="280" viewBox="0 0 720 280" role="img" aria-labelledby="title desc">
+  <title id="title">rong2qi</title>
+  <desc id="desc">A quiet personal space in plum black, muted green and faded rose. The center is intentionally left empty.</desc>
+  <defs>
+    <linearGradient id="ground" x2="1" y2="1"><stop stop-color="#211e27"/><stop offset=".52" stop-color="#242528"/><stop offset="1" stop-color="#302326"/></linearGradient>
+    <linearGradient id="trace"><stop stop-color="#74857e"/><stop offset=".44" stop-color="#948295"/><stop offset="1" stop-color="#b98a81"/></linearGradient>
+  </defs>
+  <rect x="1" y="1" width="718" height="278" rx="4" fill="url(#ground)" stroke="#37333e"/>
+  <path d="M42 51h83m7 0h19" fill="none" stroke="#a28b9b" stroke-width="2"/>
+  <path d="M46 55h62" fill="none" stroke="#60736e" stroke-width="2"/>
+  <rect x="592" y="38" width="68" height="8" fill="#776875" opacity=".3" transform="rotate(-3 626 42)"/>
+  <!-- Leave the center empty. Add your own text here, or use the Markdown slot below. -->
+  <path d="M475 192l123 -3" stroke="url(#trace)" stroke-width="3"/>
+  <path d="M537 197l48 -1" stroke="#a1837f" opacity=".45"/>
+  <text x="42" y="231" fill="#ded8d5" font-family="Arial, Helvetica, sans-serif" font-size="34" letter-spacing="-1">rong2qi<tspan fill="#bda099">.</tspan></text>
+  <path d="M652 223l7 -8 6 7 -8 9z" fill="#ad989e"/>
+</svg>

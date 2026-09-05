@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="132" viewBox="0 0 720 132" role="img" aria-labelledby="title desc">
+  <title id="title">Blank space</title>
+  <desc id="desc">An intentionally empty area for future writing.</desc>
+  <defs><linearGradient id="ground"><stop stop-color="#25262a"/><stop offset=".55" stop-color="#23282a"/><stop offset="1" stop-color="#29252e"/></linearGradient></defs>
+  <rect x="1" y="1" width="718" height="130" rx="4" fill="url(#ground)" stroke="#706572"/>
+  <path d="M44 39h34" stroke="#9ca9a3" stroke-width="2"/>
+  <path d="M628 92h43" stroke="#8e7b89" stroke-width="2"/>
+  <path d="M641 96h18" stroke="#70817c"/>
+</svg>
