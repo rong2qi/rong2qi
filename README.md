@@ -10,11 +10,13 @@
   <img src="assets/works-divider.svg" alt="works" width="100%">
 </picture>
 
-<img src="assets/work-fish.svg" alt="fish-meditate — dark water with broken reflected light" width="160">
+<p>
+<picture><img src="assets/work-fish.svg" alt="fish-meditate — dark water with broken reflected light" width="160"></picture>
 <a href="https://github.com/rong2qi/desktop-pet-jinbao"><img src="assets/work-jinbao.svg" alt="desktop-pet-jinbao — two cats in a grey-rose curtain light" width="160"></a>
 <a href="https://github.com/rong2qi/prompt-agent-orchestrator"><img src="assets/work-orchestrator.svg" alt="prompt-agent-orchestrator — a pink diagonal light through a dark field" width="160"></a>
 <a href="https://github.com/rong2qi/SpeakLoop"><img src="assets/work-speakloop.svg" alt="SpeakLoop — headphones in a charcoal studio" width="160"></a>
 <a href="https://github.com/rong2qi/chief-of-staff-codex"><img src="assets/work-chief.svg" alt="chief-of-staff-codex — fractured black mineral with pale rose deposits" width="160"></a>
+</p>
 <!-- EDITABLE: fish-meditate is intentionally a visual-only slot until a public repository exists. -->
 
 <picture>

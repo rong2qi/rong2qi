@@ -43,6 +43,9 @@ def main():
     assert 'href="https://github.com/rong2qi/fish-meditate"' not in readme
     assert '[GitHub ↗](https://github.com/rong2qi)' in readme
     assert '[repositories ↗](https://github.com/rong2qi?tab=repositories)' in readme
+    card_group=readme.split('<p>')[1].split('</p>')[0]
+    assert card_group.count('<img ')==5, 'All five cards must share one paragraph to flow together.'
+    assert '<picture><img src="assets/work-fish.svg"' in card_group, 'Prevent GitHub auto-linking the placeholder.'
     forbidden={'script','foreignObject','image','a','animate','animateTransform','set'}
     svgs=sorted(ASSETS.rglob('*.svg'))
     for path in svgs:
