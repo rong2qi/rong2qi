@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="92" viewBox="0 0 1024 92" role="img" aria-labelledby="title">
 <title id="title">works</title>
 <rect width="1024" height="92" fill="#111212"/>
-<g fill="#d9d5d0" font-family="Georgia, 'Times New Roman', serif"><g id="works-label"><circle cx="45" cy="56" r="4" fill="#d2bbb5"/><text x="66" y="62" font-size="42" letter-spacing="4">works</text></g></g>
+<g fill="#d9d5d0" font-family="Georgia, 'Times New Roman', serif"><g id="works-label"><circle cx="45" cy="56" r="4" fill="#d2bbb5"/><text x="66" y="62" font-size="52" letter-spacing="4">works</text></g></g>
 </svg>

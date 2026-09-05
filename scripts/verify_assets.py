@@ -36,7 +36,7 @@ def main():
         path=(ROOT/url).resolve()
         assert path.is_relative_to(ASSETS.resolve()) and path.is_file(), url
         if 'src' in item: assert item.get('alt'), f'Missing alt: {url}'
-        else: assert item['media']=='(max-width: 600px)', item
+        else: assert item['media']=='(max-width: 1024px)', item
     expected={'https://github.com/rong2qi/'+name for name in (
         'desktop-pet-jinbao','prompt-agent-orchestrator','SpeakLoop','chief-of-staff-codex')}
     assert set(parser.links)==expected, parser.links

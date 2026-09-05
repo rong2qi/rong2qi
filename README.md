@@ -1,12 +1,12 @@
 <picture>
-  <source media="(max-width: 600px)" srcset="assets/hero-mobile.svg">
+  <source media="(max-width: 1024px)" srcset="assets/hero-mobile.svg">
   <img src="assets/hero.svg" alt="rong2qi · now — 粉灰与青绿的裂痕，斜光与留白" width="100%">
 </picture>
 
 <!-- EDITABLE: The hero intentionally holds open negative space. Add only a short line here if you need one. -->
 
 <picture>
-  <source media="(max-width: 600px)" srcset="assets/works-divider-mobile.svg">
+  <source media="(max-width: 1024px)" srcset="assets/works-divider-mobile.svg">
   <img src="assets/works-divider.svg" alt="works" width="100%">
 </picture>
 
@@ -20,7 +20,7 @@
 <!-- EDITABLE: fish-meditate is intentionally a visual-only slot until a public repository exists. -->
 
 <picture>
-  <source media="(max-width: 600px)" srcset="assets/ashes-trace-mobile.svg">
+  <source media="(max-width: 1024px)" srcset="assets/ashes-trace-mobile.svg">
   <img src="assets/ashes-trace.svg" alt="ashes · trace — 灰烬纹理与留白" width="100%">
 </picture>
 

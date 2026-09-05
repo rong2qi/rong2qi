@@ -18,6 +18,6 @@ README 使用真正的 HTML 链接包裹项目小图；四个公开仓库可点�
 
 `assets/materials/` 是从用户批准原稿的非文字区域量化描摹得到的原生 SVG 路径，保留其纹理与构图形态；它们不是嵌入 PNG，也不是新的随机粒子图。原图 SHA-256 和区域记录在 `assets/materials/manifest.json`。修改构图时编辑生成器的素材坐标、缩放和文字。
 
-所有资源均为仓库内相对路径，无脚本、动画、外部字体、统计或网络依赖。明暗模式都使用自带暗底的画布。`*-mobile.svg` 放大必要标签，README 的 `<picture>` 在视口不大于 600px 时选择它们。GitHub 自身的页面底色、Markdown 区块间距、图片焦点边框不由 README 控制。
+所有资源均为仓库内相对路径，无脚本、动画、外部字体、统计或网络依赖。明暗模式都使用自带暗底的画布。`*-mobile.svg` 放大必要标签，README 的 `<picture>` 在视口不大于 1024px 时选择它们。GitHub 自身的页面底色、Markdown 区块间距、图片焦点边框不由 README 控制。
 
 生成后运行 `python3 scripts/verify_assets.py` 检查资源结构、相对路径与可重复生成。只有 feature 分支上的变更通过 PR 合并后，公开个人主页才会显示本 README。

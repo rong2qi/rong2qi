@@ -27,7 +27,7 @@ def words(lines, x, y, size, line_height):
     return ''.join(f'<text x="{x}" y="{y+i*line_height}" font-size="{size}">{escape(line)}</text>' for i,line in enumerate(lines))
 
 def label(name, y, mobile=False, hollow=False):
-    size = 42 if mobile else 19
+    size = 52 if mobile else 19
     dot = f'<circle cx="45" cy="{y-6}" r="4" fill="none" stroke="{INK}"/>' if hollow else f'<circle cx="45" cy="{y-6}" r="4" fill="#d2bbb5"/>'
     return f'{dot}<text x="66" y="{y}" font-size="{size}" letter-spacing="4">{name}</text>'
 
@@ -39,7 +39,7 @@ def write(name, height, body, title, width=1024):
 </svg>\n''', encoding='utf-8')
 
 def hero(mobile=False):
-    size = 44 if mobile else 24
+    size = 56 if mobile else 24
     body = f'''<defs><linearGradient id="seam" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#807575" stop-opacity=".3"/><stop offset=".38" stop-color="#b9a49f" stop-opacity=".8"/><stop offset="1" stop-color="#c6a29c" stop-opacity=".35"/></linearGradient></defs>
 <g id="identity"><text x="41" y="{63 if mobile else 49}" font-size="{size}" letter-spacing="2">rong2qi</text></g>
 <path d="M42 79h12M43 183v133" fill="none" stroke="#b2aaa2" stroke-opacity=".6" stroke-width=".8"/>
