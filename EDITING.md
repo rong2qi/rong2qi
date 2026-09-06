@@ -24,11 +24,13 @@ README 使用真正的 HTML 链接包裹项目小图；四个公开仓库可点�
 
 主图仅有裂痕亮部和斜光变化，水面卡片只有反光轻微晃动；文字、版式、其他四张卡片和页脚保持静止。动图是从同一份 SVG 生成的 12 秒、10 帧/秒 GIF，固定调色板，不逐帧添加噪点。原生 SVG 素材始终保留，未嵌入位图。
 
+主图在原运动区域内保留 4 个源图像素宽的静止边缘，再向内用 4 个像素逐渐恢复亮度变化，以减少缩放时亮部越过边界的影响。运动区域范围不变；这项处理不代表浏览器截图与账户自动播放设置已完成验收。
+
 `scripts/build_motion.py` 生成 `hero-motion.gif`、`hero-mobile-motion.gif`、`work-fish-motion.gif`，同时更新 `assets/motion-manifest.json` 的源文件哈希、尺寸和循环信息。运行环境需要 Python 的 Pillow、NumPy，以及 Node.js 的 Sharp；制作时使用 Pillow 12.3.0、NumPy 2.3.5、Node 24.19.0、Sharp 0.35.4，无需视频生成服务。
 
 在具备这些库的环境中运行 `python3 scripts/build_motion.py`。Node 不在搜索路径时，用 `--node /实际路径/node` 指定；Sharp 不在默认模块位置时，用环境变量 `PROFILE_SHARP_MODULE=/实际路径/node_modules/sharp` 指定。脚本按自身位置找到仓库，不依赖制作电脑的固定目录。
 
-系统开启“减少动态”时，README 优先选择对应的静态 SVG。GitHub 也提供 Settings → Accessibility → Motion → Autoplay animated images 设置；原生播放控件由 GitHub 提供。请保留静态 source 在移动动图 source 之前的顺序，以及五张卡片共享的同一个 `<p>`，避免回退错误和换行变化。
+系统开启“减少动态”时，README 优先选择对应的静态 SVG。GitHub 也提供 Settings → Accessibility → Motion → Autoplay animated images 设置；本 README 对账户设置的实际响应仍需网页验收确认。请保留静态 source 在移动动图 source 之前的顺序，以及五张卡片共享的同一个 `<p>`，避免回退错误和换行变化。
 
 生成后运行 `python3 scripts/verify_motion.py --rebuild`，检查整段动图解码、局部变化范围、12 秒循环、资源哈希、体积与可重复生成。动图修改后还需在真实 GitHub 检查自动播放、静态回退和卡片布局；本地帧检查不能替代网页验收。
 

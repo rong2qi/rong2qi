@@ -2,7 +2,7 @@
   "schema": 1,
   "duration_ms": 12000,
   "fps": 10,
-  "policy": "Fixed palette; no dithering; local pigment/reflection motion; static SVGs unchanged",
+  "policy": "Fixed palette; no dithering; local pigment/reflection motion; hero has 4px stationary inner band and 4px inward fade; static SVGs unchanged",
   "runtime": {
     "node": "v24.19.0",
     "sharp": "0.35.4",
@@ -15,8 +15,8 @@
       "file": "hero-motion.gif",
       "source": "assets/hero.svg",
       "source_sha256": "f90a72eb8a491d6a489534e16a6d59d460ebfa5d2e78b6127384a1910f660862",
-      "sha256": "52dbe64ef3dd228926a960d775b2d91c0219fc77b1fcc2944ecdbee9764a555b",
-      "bytes": 611069,
+      "sha256": "b7286c22c012e3ce050a68b8f9f3df0f8bbd75e3d6aa2cba27390ff98a7f563f",
+      "bytes": 598952,
       "width": 1024,
       "height": 865,
       "frames": 120,
@@ -40,14 +40,16 @@
           824
         ]
       ],
-      "byte_budget": 4500000
+      "byte_budget": 4500000,
+      "stationary_inner_band_source_px": 4,
+      "inward_fade_source_px": 4
     },
     {
       "file": "hero-mobile-motion.gif",
       "source": "assets/hero-mobile.svg",
       "source_sha256": "20e600dfdf9d3300a305bcc8066e01fb23fedaebbb8295eaa72b42f97cb767e0",
-      "sha256": "112f0ffcd2c6b973aa57417573ae44abcbf120589e0f38a9657d89e460751bb7",
-      "bytes": 503756,
+      "sha256": "008146a1f0ae34e2062156d09715edb8a75605c7d1f89eb493aefb9109e513a0",
+      "bytes": 496075,
       "width": 768,
       "height": 649,
       "frames": 120,
@@ -71,7 +73,9 @@
           824
         ]
       ],
-      "byte_budget": 4500000
+      "byte_budget": 4500000,
+      "stationary_inner_band_source_px": 4,
+      "inward_fade_source_px": 4
     },
     {
       "file": "work-fish-motion.gif",
@@ -96,7 +100,9 @@
           226
         ]
       ],
-      "byte_budget": 500000
+      "byte_budget": 500000,
+      "stationary_inner_band_source_px": 0,
+      "inward_fade_source_px": 0
     }
   ]
 }

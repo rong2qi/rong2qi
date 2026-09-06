@@ -24,9 +24,14 @@ def verify():
     assert manifest['duration_ms'] == 12_000 and manifest['fps'] == 10
     expected = {'hero-motion.gif': (1024, 865), 'hero-mobile-motion.gif': (768, 649),
                 'work-fish-motion.gif': (320, 326)}
+    hero_regions = [[330, 0, 850, 505], [448, 589, 870, 824]]
     assert {a['file'] for a in manifest['assets']} == set(expected)
     results = []
     for item in manifest['assets']:
+        is_hero = item['file'].startswith('hero')
+        assert item['motion_regions'] == (hero_regions if is_hero else [[10, 10, 310, 226]]), 'Approved region drift'
+        assert item['stationary_inner_band_source_px'] == (4 if is_hero else 0)
+        assert item['inward_fade_source_px'] == (4 if is_hero else 0)
         path = ROOT/'assets'/item['file']
         source = (ROOT/item['source']).resolve()
         assert source.is_relative_to((ROOT/'assets').resolve()) and source.suffix == '.svg'
@@ -43,6 +48,11 @@ def verify():
             masks = [(x>=x0)&(x<x1)&(y>=y0)&(y<y1)
                      for x0,y0,x1,y1 in item['motion_regions']]
             allowed = np.logical_or.reduce(masks)
+            guard = np.zeros((height, width), dtype=bool)
+            if is_hero:
+                for mask, (x0, y0, x1, y1) in zip(masks, hero_regions):
+                    distance = np.minimum.reduce([x-x0, x1-x, y-y0, y1-y])
+                    guard |= mask & (distance <= 4)
             counts = np.zeros(len(masks), dtype='int64')
             first = np.asarray(gif.convert('RGB')).copy()
             previous = first
@@ -53,6 +63,7 @@ def verify():
                 current = np.asarray(gif.convert('RGB')).copy()
                 changed = np.any(current != first, axis=2)
                 assert not np.any(changed & ~allowed), f'{path.name}: motion outside approved regions'
+                assert not np.any(changed & guard), f'{path.name}: motion inside stationary edge band'
                 for n, mask in enumerate(masks):
                     counts[n] = max(counts[n], np.count_nonzero(changed & mask))
                 if index:
@@ -69,6 +80,7 @@ def verify():
             assert closing <= max(differences)*1.5 + .01, f'{path.name}: abrupt loop seam'
             results.append({'file': path.name, 'bytes': item['bytes'], 'frames': gif.n_frames,
                             'duration_ms': sum(durations), 'static_region_changes': 0,
+                            'stationary_inner_band_changes': 0,
                             'max_changed_pixels_per_region': [int(c) for c in counts],
                             'max_adjacent_frame_mean_delta': max(differences),
                             'loop_seam_mean_delta': closing, 'samples': observed})

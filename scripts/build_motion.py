@@ -18,6 +18,8 @@ FPS = 10
 SECONDS = 12
 FRAME_COUNT = FPS * SECONDS
 FRAME_MS = 1000 // FPS
+HERO_INNER_GUARD = 4
+HERO_INNER_FADE = 4
 SPECS = (
     ('hero', 1024, [[330, 0, 850, 505], [448, 589, 870, 824]], 4_500_000),
     ('hero-mobile', 768, [[330, 0, 850, 505], [448, 589, 870, 824]], 4_500_000),
@@ -38,10 +40,16 @@ def make_frame_function(name, image):
         x = xx * 1024 / width
         y = yy * 865 / height
         luma = base @ np.array([.2126, .7152, .0722], dtype=np.float32)
-        mineral = ((x >= 330) & (x < 850) & (y < 505))
+        def region_weight(bounds):
+            x0, y0, x1, y1 = bounds
+            distance = np.minimum.reduce([x - x0, x1 - x, y - y0, y1 - y])
+            # Keep a fixed inner border so scaled light cannot sample across it.
+            return np.clip((distance - HERO_INNER_GUARD) / HERO_INNER_FADE, 0, 1)
+
+        mineral = region_weight((330, 0, 850, 505))
         # Only existing pigment receives the moving light; the dark field stays fixed.
         pigment = np.clip((luma - 30) / 60, 0, 1) * mineral
-        light_area = (x >= 448) & (x < 870) & (y >= 589) & (y < 824)
+        light_area = region_weight((448, 589, 870, 824))
         first = np.exp(-.5 * (((x - 629) / 48) ** 2 + ((y - 765) / 30) ** 2)) * light_area
         second = np.exp(-.5 * (((x - 850) / 35) ** 2 + ((y - 657) / 27) ** 2)) * light_area
 
@@ -118,12 +126,14 @@ def build(output, node):
                             'bytes': target.stat().st_size, 'width': width, 'height': image.height,
                             'frames': count, 'duration_ms': duration, 'loop': 0,
                             'source_viewbox': [1024, 865] if name.startswith('hero') else [320, 326],
-                            'motion_regions': regions, 'byte_budget': limit})
+                            'motion_regions': regions, 'byte_budget': limit,
+                            'stationary_inner_band_source_px': HERO_INNER_GUARD if name.startswith('hero') else 0,
+                            'inward_fade_source_px': HERO_INNER_FADE if name.startswith('hero') else 0})
             print(f'{target.name}: {target.stat().st_size:,} bytes, {count} frames, {duration}ms', flush=True)
         fish_bytes = entries[-1]['bytes']
         assert all(item['bytes'] + fish_bytes <= 5_000_000 for item in entries[:2])
         manifest = {'schema': 1, 'duration_ms': SECONDS*1000, 'fps': FPS,
-                    'policy': 'Fixed palette; no dithering; local pigment/reflection motion; static SVGs unchanged',
+                    'policy': 'Fixed palette; no dithering; local pigment/reflection motion; hero has 4px stationary inner band and 4px inward fade; static SVGs unchanged',
                     'runtime': {**json.loads((raster/'renderer.json').read_text()),
                                 'pillow': pillow_version, 'numpy': np.__version__}, 'assets': entries}
         (output/'motion-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
