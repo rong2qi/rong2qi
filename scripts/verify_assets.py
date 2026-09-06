@@ -18,25 +18,43 @@ ASSETS = ROOT / 'assets'
 
 class ReadmeParser(HTMLParser):
     def __init__(self):
-        super().__init__(); self.images=[]; self.links=[]; self.sources=[]
+        super().__init__(); self.images=[]; self.links=[]; self.sources=[]; self.pictures=[]; self.picture=None
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
-        if tag=='img': self.images.append(a)
-        if tag=='source': self.sources.append(a)
+        if tag=='picture': self.picture={'sources':[], 'image':None}
+        if tag=='img':
+            self.images.append(a)
+            if self.picture is not None: self.picture['image']=a
+        if tag=='source':
+            self.sources.append(a)
+            if self.picture is not None: self.picture['sources'].append(a)
         if tag=='a': self.links.append(a['href'])
+    def handle_endtag(self,tag):
+        if tag=='picture':
+            self.pictures.append(self.picture); self.picture=None
 
 def main():
     readme=(ROOT/'README.md').read_text()
     parser=ReadmeParser();parser.feed(readme)
     assert len(parser.images)==8, 'Expected hero, works heading, five projects and footer.'
-    assert len(parser.sources)==3, 'All wide compositions need mobile sources.'
+    assert len(parser.sources)==6, 'Responsive and reduced-motion sources must remain available.'
     for item in parser.images+parser.sources:
         url=item.get('src',item.get('srcset'))
         assert not urlsplit(url).scheme and not url.startswith('/'), url
         path=(ROOT/url).resolve()
         assert path.is_relative_to(ASSETS.resolve()) and path.is_file(), url
         if 'src' in item: assert item.get('alt'), f'Missing alt: {url}'
-        else: assert item['media']=='(max-width: 1024px)', item
+    expected_pictures=[
+        ('assets/hero-motion.gif', [
+            ('(prefers-reduced-motion: reduce) and (max-width: 1024px)', 'assets/hero-mobile.svg'),
+            ('(prefers-reduced-motion: reduce)', 'assets/hero.svg'),
+            ('(max-width: 1024px)', 'assets/hero-mobile-motion.gif')]),
+        ('assets/works-divider.svg', [('(max-width: 1024px)', 'assets/works-divider-mobile.svg')]),
+        ('assets/work-fish-motion.gif', [('(prefers-reduced-motion: reduce)', 'assets/work-fish.svg')]),
+        ('assets/ashes-trace.svg', [('(max-width: 1024px)', 'assets/ashes-trace-mobile.svg')]),
+    ]
+    actual_pictures=[(p['image']['src'], [(s['media'],s['srcset']) for s in p['sources']]) for p in parser.pictures]
+    assert actual_pictures==expected_pictures, 'Reduced-motion fallbacks must precede width alternatives.'
     expected={'https://github.com/rong2qi/'+name for name in (
         'desktop-pet-jinbao','prompt-agent-orchestrator','SpeakLoop','chief-of-staff-codex')}
     assert set(parser.links)==expected, parser.links
@@ -45,7 +63,7 @@ def main():
     assert '[repositories ↗](https://github.com/rong2qi?tab=repositories)' in readme
     card_group=readme.split('<p>')[1].split('</p>')[0]
     assert card_group.count('<img ')==5, 'All five cards must share one paragraph to flow together.'
-    assert '<picture><img src="assets/work-fish.svg"' in card_group, 'Prevent GitHub auto-linking the placeholder.'
+    assert '<picture><source media="(prefers-reduced-motion: reduce)" srcset="assets/work-fish.svg"><img' in card_group, 'Keep the placeholder unlinked and preserve its static fallback.'
     forbidden={'script','foreignObject','image','a','animate','animateTransform','set'}
     svgs=sorted(ASSETS.rglob('*.svg'))
     for path in svgs:
@@ -77,6 +95,6 @@ def main():
         assert len(outputs)==11
         for output in outputs:
             assert output.read_bytes()==(ASSETS/output.name).read_bytes(), f'Regenerate {output.name}'
-    print(json.dumps({'status':'PASS','svg_files':len(svgs),'readme_images':len(parser.images),'mobile_sources':len(parser.sources),'project_links':len(parser.links),'generation':'byte-identical','embedded_raster':False,'svg_bytes':sum(p.stat().st_size for p in svgs)}))
+    print(json.dumps({'status':'PASS','svg_files':len(svgs),'readme_images':len(parser.images),'picture_sources':len(parser.sources),'animated_images':2,'project_links':len(parser.links),'generation':'byte-identical','embedded_raster_in_svg':False,'svg_bytes':sum(p.stat().st_size for p in svgs)}))
 
 if __name__=='__main__': main()

@@ -1,6 +1,8 @@
 <picture>
-  <source media="(max-width: 1024px)" srcset="assets/hero-mobile.svg">
-  <img src="assets/hero.svg" alt="rong2qi · now — 粉灰与青绿的裂痕，斜光与留白" width="100%">
+  <source media="(prefers-reduced-motion: reduce) and (max-width: 1024px)" srcset="assets/hero-mobile.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/hero.svg">
+  <source media="(max-width: 1024px)" srcset="assets/hero-mobile-motion.gif">
+  <img src="assets/hero-motion.gif" alt="rong2qi · now — 粉灰与青绿的裂痕，斜光与留白" width="100%">
 </picture>
 
 <!-- EDITABLE: The hero intentionally holds open negative space. Add only a short line here if you need one. -->
@@ -11,7 +13,7 @@
 </picture>
 
 <p>
-<picture><img src="assets/work-fish.svg" alt="fish-meditate — dark water with broken reflected light" width="160"></picture>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="assets/work-fish.svg"><img src="assets/work-fish-motion.gif" alt="fish-meditate — dark water with broken reflected light" width="160"></picture>
 <a href="https://github.com/rong2qi/desktop-pet-jinbao"><img src="assets/work-jinbao.svg" alt="desktop-pet-jinbao — two cats in a grey-rose curtain light" width="160"></a>
 <a href="https://github.com/rong2qi/prompt-agent-orchestrator"><img src="assets/work-orchestrator.svg" alt="prompt-agent-orchestrator — a pink diagonal light through a dark field" width="160"></a>
 <a href="https://github.com/rong2qi/SpeakLoop"><img src="assets/work-speakloop.svg" alt="SpeakLoop — headphones in a charcoal studio" width="160"></a>
