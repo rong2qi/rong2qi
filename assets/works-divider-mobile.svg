@@ -2,7 +2,7 @@
 <title id="title">works</title>
 <rect width="1024" height="92" fill="#11131A"/>
 <rect x="1" y="1" width="1022" height="90" fill="none" stroke="#D3CBC2" stroke-opacity=".14"/>
-<g fill="#D3CBC2" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><g id="works-label"><circle cx="45" cy="52" r="4" fill="#8D5660"/><text x="66" y="58" font-size="42" letter-spacing="4">works</text></g>
+<g fill="#D3CBC2" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><g id="works-label"><circle cx="45" cy="52" r="4" fill="#8D5660"/><text x="66" y="58" font-size="46" letter-spacing="4">works</text></g>
 <path d="M760 18A52 52 0 0 1 831 57" fill="none" stroke="#6F8983" stroke-width="2" stroke-opacity=".5"/>
 <path d="M845 51H979" stroke="#8D5660" stroke-width="1" stroke-opacity=".45"/></g>
 </svg>

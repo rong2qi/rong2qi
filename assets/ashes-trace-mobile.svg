@@ -3,7 +3,7 @@
 <rect width="1024" height="308" fill="#11131A"/>
 <rect x="1" y="1" width="1022" height="306" fill="none" stroke="#D3CBC2" stroke-opacity=".14"/>
 <g fill="#D3CBC2" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><path d="M41 10H981" stroke="#D3CBC2" stroke-opacity=".2"/>
-<g id="ashes-label"><circle cx="45" cy="52" r="4" fill="#8D5660"/><text x="66" y="58" font-size="42" letter-spacing="4">ashes</text></g>
+<g id="ashes-label"><circle cx="45" cy="52" r="4" fill="#8D5660"/><text x="66" y="58" font-size="46" letter-spacing="4">ashes</text></g>
 <g id="ink-remains">
   <path d="M420 161C492 112 525 68 590 59C639 52 671 73 716 67C773 60 807 33 866 45C815 76 788 101 746 111C686 126 645 104 594 119C540 135 499 172 420 161Z" fill="#D3CBC2" fill-opacity=".12"/>
   <path d="M470 145C541 129 574 93 624 91C680 89 709 119 759 104C718 139 679 148 626 136C570 123 535 154 470 145Z" fill="#11131A" stroke="#D3CBC2" stroke-opacity=".22"/>
@@ -12,5 +12,5 @@
 </g>
 <g id="ashes-words"></g>
 <path d="M41 184H981" stroke="#D3CBC2" stroke-opacity=".2"/>
-<g id="trace-label"><circle cx="45" cy="229" r="4" fill="none" stroke="#D3CBC2"/><text x="66" y="235" font-size="42" letter-spacing="4">trace</text></g></g>
+<g id="trace-label"><circle cx="45" cy="229" r="4" fill="none" stroke="#D3CBC2"/><text x="66" y="235" font-size="46" letter-spacing="4">trace</text></g></g>
 </svg>

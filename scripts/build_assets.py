@@ -30,7 +30,7 @@ def words(lines, x, y, size, line_height):
 
 
 def label(name, y, mobile=False, hollow=False):
-    size = 42 if mobile else 19
+    size = 46 if mobile else 19
     dot = (
         f'<circle cx="45" cy="{y - 6}" r="4" fill="none" stroke="{BONE}"/>'
         if hollow else
@@ -95,9 +95,9 @@ def hero_world(mobile=False):
 
 
 def hero(mobile=False):
-    identity_size = 42 if mobile else 24
-    now_size = 42 if mobile else 15
-    date_size = 42 if mobile else 15
+    identity_size = 46 if mobile else 24
+    now_size = 46 if mobile else 15
+    date_size = 46 if mobile else 15
     now_x, now_y = ((42, 112) if mobile else (934, 49))
     body = f'''<defs>
   <linearGradient id="night-wash" x1="0" y1="0" x2="1" y2="1">
@@ -216,7 +216,7 @@ def write_manifest():
         })
     manifest = {
         'schema': 1,
-        'candidate_label': 'PROFILE-REFRACTED-20260910-01',
+        'candidate_label': 'PROFILE-REFRACTED-20260910-02',
         'style': '折光圣像 / refracted icon',
         'method': (
             'Original deterministic SVG geometry; no reference-image pixels, '
