@@ -2,7 +2,7 @@
   "schema": 1,
   "duration_ms": 12000,
   "fps": 10,
-  "policy": "Fixed palette; no dithering; local pigment/reflection motion; hero has 4px stationary inner band and 4px inward fade; static SVGs unchanged",
+  "policy": "Fixed five-color source; no dithering; only broken orbit and stars, hair tips, vertical seam, and fish reflection move; portrait and type remain fixed",
   "runtime": {
     "node": "v24.19.0",
     "sharp": "0.35.4",
@@ -14,9 +14,9 @@
     {
       "file": "hero-motion.gif",
       "source": "assets/hero.svg",
-      "source_sha256": "f90a72eb8a491d6a489534e16a6d59d460ebfa5d2e78b6127384a1910f660862",
-      "sha256": "b7286c22c012e3ce050a68b8f9f3df0f8bbd75e3d6aa2cba27390ff98a7f563f",
-      "bytes": 598952,
+      "source_sha256": "8c6a0c66e3a18388875314a69b4b47722b2379c0a6afe34183c31a8549efdb59",
+      "sha256": "614e934fbdd6d17e31a685cc2bf569de50b606b77c8335da3ecd3f24c901dbd0",
+      "bytes": 954879,
       "width": 1024,
       "height": 865,
       "frames": 120,
@@ -28,18 +28,39 @@
       ],
       "motion_regions": [
         [
-          330,
-          0,
-          850,
-          505
+          540,
+          65,
+          990,
+          570
         ],
         [
-          448,
-          589,
-          870,
-          824
+          500,
+          480,
+          670,
+          720
+        ],
+        [
+          860,
+          480,
+          1020,
+          720
+        ],
+        [
+          668,
+          0,
+          684,
+          865
         ]
       ],
+      "motion_limits": {
+        "hair_tip_translation_source_px": {
+          "left": 2.4,
+          "right": 2.1
+        },
+        "orbit_translation_source_px": 0,
+        "star_translation_source_px": 0,
+        "seam_translation_source_px": 0
+      },
       "byte_budget": 4500000,
       "stationary_inner_band_source_px": 4,
       "inward_fade_source_px": 4
@@ -47,9 +68,9 @@
     {
       "file": "hero-mobile-motion.gif",
       "source": "assets/hero-mobile.svg",
-      "source_sha256": "20e600dfdf9d3300a305bcc8066e01fb23fedaebbb8295eaa72b42f97cb767e0",
-      "sha256": "008146a1f0ae34e2062156d09715edb8a75605c7d1f89eb493aefb9109e513a0",
-      "bytes": 496075,
+      "source_sha256": "eb51e6898a6e22e951249d3e8f9365d9c721b4433cfdf98fb82dbf265febab36",
+      "sha256": "9720e79afb4d7ddd7db8b3bfff8498ddfb1339820555252c8e5a3a3cdd762098",
+      "bytes": 899566,
       "width": 768,
       "height": 649,
       "frames": 120,
@@ -61,18 +82,39 @@
       ],
       "motion_regions": [
         [
-          330,
-          0,
-          850,
-          505
+          510,
+          10,
+          1000,
+          635
         ],
         [
-          448,
-          589,
-          870,
-          824
+          425,
+          515,
+          650,
+          825
+        ],
+        [
+          880,
+          515,
+          1024,
+          825
+        ],
+        [
+          668,
+          0,
+          684,
+          865
         ]
       ],
+      "motion_limits": {
+        "hair_tip_translation_source_px": {
+          "left": 2.4,
+          "right": 2.1
+        },
+        "orbit_translation_source_px": 0,
+        "star_translation_source_px": 0,
+        "seam_translation_source_px": 0
+      },
       "byte_budget": 4500000,
       "stationary_inner_band_source_px": 4,
       "inward_fade_source_px": 4
@@ -80,9 +122,9 @@
     {
       "file": "work-fish-motion.gif",
       "source": "assets/work-fish.svg",
-      "source_sha256": "7bd538e8c2ad02b77db0504991bc50779a110b5fa5ec442ae2021e973404e051",
-      "sha256": "ff9603c05029371bd5977957eda2aef8c305bfe078a1bfc68d770dd17b8e719f",
-      "bytes": 427842,
+      "source_sha256": "1fba4a9701ae3455673818d85e624de9e56263f0460eace492bcf962595d7672",
+      "sha256": "d647827a09834d047af8c75af2a2b44e64a39a8a8530e190291b0dca61e4d5c5",
+      "bytes": 167304,
       "width": 320,
       "height": 326,
       "frames": 120,
@@ -100,6 +142,9 @@
           226
         ]
       ],
+      "motion_limits": {
+        "reflection_translation_source_px": 1.9
+      },
       "byte_budget": 500000,
       "stationary_inner_band_source_px": 0,
       "inward_fade_source_px": 0

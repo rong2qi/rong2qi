@@ -20,9 +20,22 @@ FRAME_COUNT = FPS * SECONDS
 FRAME_MS = 1000 // FPS
 HERO_INNER_GUARD = 4
 HERO_INNER_FADE = 4
+LEFT_HAIR_SHIFT_SOURCE_PX = 2.4
+RIGHT_HAIR_SHIFT_SOURCE_PX = 2.1
+FISH_REFLECTION_SHIFT_SOURCE_PX = 1.9
+HERO_REGIONS = {
+    'hero': [[540, 65, 990, 570], [500, 480, 670, 720],
+             [860, 480, 1020, 720], [668, 0, 684, 865]],
+    'hero-mobile': [[510, 10, 1000, 635], [425, 515, 650, 825],
+                    [880, 515, 1024, 825], [668, 0, 684, 865]],
+}
+PORTRAIT_GUARDS = {
+    'hero': [675, 145, 855, 485],
+    'hero-mobile': [645, 90, 880, 535],
+}
 SPECS = (
-    ('hero', 1024, [[330, 0, 850, 505], [448, 589, 870, 824]], 4_500_000),
-    ('hero-mobile', 768, [[330, 0, 850, 505], [448, 589, 870, 824]], 4_500_000),
+    ('hero', 1024, HERO_REGIONS['hero'], 4_500_000),
+    ('hero-mobile', 768, HERO_REGIONS['hero-mobile'], 4_500_000),
     ('work-fish', 320, [[10, 10, 310, 226]], 500_000),
 )
 
@@ -32,7 +45,7 @@ def sha(path):
 
 
 def make_frame_function(name, image):
-    """Return RGB frames; masks deliberately exclude all labels and borders."""
+    """Return RGB frames; only the named visual fragments may move."""
     base = np.asarray(image.convert('RGB'), dtype=np.float32)
     height, width = base.shape[:2]
     yy, xx = np.mgrid[:height, :width].astype(np.float32)
@@ -40,27 +53,72 @@ def make_frame_function(name, image):
         x = xx * 1024 / width
         y = yy * 865 / height
         luma = base @ np.array([.2126, .7152, .0722], dtype=np.float32)
+
         def region_weight(bounds):
             x0, y0, x1, y1 = bounds
             distance = np.minimum.reduce([x - x0, x1 - x, y - y0, y1 - y])
-            # Keep a fixed inner border so scaled light cannot sample across it.
             return np.clip((distance - HERO_INNER_GUARD) / HERO_INNER_FADE, 0, 1)
 
-        mineral = region_weight((330, 0, 850, 505))
-        # Only existing pigment receives the moving light; the dark field stays fixed.
-        pigment = np.clip((luma - 30) / 60, 0, 1) * mineral
-        light_area = region_weight((448, 589, 870, 824))
-        first = np.exp(-.5 * (((x - 629) / 48) ** 2 + ((y - 765) / 30) ** 2)) * light_area
-        second = np.exp(-.5 * (((x - 850) / 35) ** 2 + ((y - 657) / 27) ** 2)) * light_area
+        orbit_area, left_area, right_area, seam_area = [
+            region_weight(bounds) for bounds in HERO_REGIONS[name]
+        ]
+        gx0, gy0, gx1, gy1 = PORTRAIT_GUARDS[name]
+        portrait_fixed = (x >= gx0) & (x < gx1) & (y >= gy0) & (y < gy1)
+        movable = (~portrait_fixed).astype(np.float32)
+
+        if name == 'hero-mobile':
+            transform = lambda px, py: (px * 1.27 - 210, py * 1.27 - 90)
+            cx, cy = transform(760, 328)
+            rx, ry = 180 * 1.27, 235 * 1.27
+            stars = [transform(px, py) for px, py in ((566, 184), (938, 206), (970, 421), (548, 474))]
+        else:
+            cx, cy, rx, ry = 760, 328, 180, 235
+            stars = [(566, 184), (938, 206), (970, 421), (548, 474)]
+
+        radius = np.sqrt(((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2)
+        ring = np.exp(-.5 * ((radius - 1) / .014) ** 2)
+        visible_line = np.clip((luma - 28) / 68, 0, 1)
+        orbit = ring * visible_line * orbit_area * movable
+        seam = np.clip(1 - np.abs(x - 676) / 4, 0, 1)
+        seam *= np.clip((luma - 22) / 42, 0, 1) * seam_area * movable
+
+        star_weights = []
+        for sx, sy in stars:
+            star_weights.append(
+                np.exp(-.5 * (((x - sx) / 5) ** 2 + ((y - sy) / 5) ** 2))
+                * orbit_area * movable
+            )
+
+        row = np.arange(height)[:, None]
+
+        def shifted(dx):
+            sample = np.clip(xx - dx, 0, width - 1)
+            left = np.floor(sample).astype('int32')
+            right = np.minimum(left + 1, width - 1)
+            fraction = (sample - left)[..., None]
+            return base[row, left] * (1 - fraction) + base[row, right] * fraction
 
         def frame(index):
             angle = 2 * math.pi * index / FRAME_COUNT
-            cy = 325 + 115 * math.cos(angle)
-            cx = float(np.interp(cy, [140, 220, 330, 400, 460], [685, 660, 655, 630, 565]))
-            travel = np.exp(-.5 * (((x - cx) / 72) ** 2 + ((y - cy) / 78) ** 2))
-            delta = .10 * math.sin(angle) * travel * pigment
-            delta += .10 * math.sin(angle) * first - .10 * math.sin(2 * angle) * second
-            return Image.fromarray(np.clip(np.rint(base * (1 + delta[..., None])), 0, 255).astype('uint8'))
+            source_scale = width / 1024
+            left_shift = LEFT_HAIR_SHIFT_SOURCE_PX * source_scale * math.sin(angle)
+            right_shift = -RIGHT_HAIR_SHIFT_SOURCE_PX * source_scale * math.sin(angle)
+            moved_left = shifted(left_shift)
+            moved_right = shifted(right_shift)
+            left_presence = np.clip((np.maximum(luma, moved_left @ np.array([.2126, .7152, .0722])) - 34) / 58, 0, 1)
+            right_presence = np.clip((np.maximum(luma, moved_right @ np.array([.2126, .7152, .0722])) - 34) / 58, 0, 1)
+            left_weight = left_area * left_presence * movable
+            right_weight = right_area * right_presence * movable
+            result = base + (moved_left - base) * left_weight[..., None]
+            result += (moved_right - base) * right_weight[..., None]
+
+            delta = .055 * math.sin(angle) * orbit
+            delta += .035 * (1 - math.cos(angle)) * seam
+            phases = (0, .7, 1.4, 2.1)
+            for weight, phase in zip(star_weights, phases):
+                delta += .075 * (math.sin(angle + phase) - math.sin(phase)) * weight
+            result *= 1 + delta[..., None]
+            return Image.fromarray(np.clip(np.rint(result), 0, 255).astype('uint8'))
     else:
         # A horizontal ripple moves reflected light by at most two source pixels.
         x0, y0, x1, y1 = 10, 10, 310, 226
@@ -75,7 +133,7 @@ def make_frame_function(name, image):
 
         def frame(index):
             angle = 2 * math.pi * index / FRAME_COUNT
-            shift = 1.9 * math.sin(angle) * (.65 + .35 * np.sin(py / 18 + angle))
+            shift = FISH_REFLECTION_SHIFT_SOURCE_PX * math.sin(angle) * (.65 + .35 * np.sin(py / 18 + angle))
             sample = np.clip(px + shift, 0, pw - 1)
             left = np.floor(sample).astype('int32')
             right = np.minimum(left + 1, pw - 1)
@@ -121,19 +179,31 @@ def build(output, node):
             with Image.open(target) as gif:
                 count = gif.n_frames
                 duration = sum((gif.seek(i), gif.info['duration'])[1] for i in range(count))
+            motion_limits = ({
+                'hair_tip_translation_source_px': {
+                    'left': LEFT_HAIR_SHIFT_SOURCE_PX,
+                    'right': RIGHT_HAIR_SHIFT_SOURCE_PX,
+                },
+                'orbit_translation_source_px': 0,
+                'star_translation_source_px': 0,
+                'seam_translation_source_px': 0,
+            } if name.startswith('hero') else {
+                'reflection_translation_source_px': FISH_REFLECTION_SHIFT_SOURCE_PX,
+            })
             entries.append({'file': target.name, 'source': source.relative_to(ROOT).as_posix(),
                             'source_sha256': sha(source), 'sha256': sha(target),
                             'bytes': target.stat().st_size, 'width': width, 'height': image.height,
                             'frames': count, 'duration_ms': duration, 'loop': 0,
                             'source_viewbox': [1024, 865] if name.startswith('hero') else [320, 326],
-                            'motion_regions': regions, 'byte_budget': limit,
+                            'motion_regions': regions, 'motion_limits': motion_limits,
+                            'byte_budget': limit,
                             'stationary_inner_band_source_px': HERO_INNER_GUARD if name.startswith('hero') else 0,
                             'inward_fade_source_px': HERO_INNER_FADE if name.startswith('hero') else 0})
             print(f'{target.name}: {target.stat().st_size:,} bytes, {count} frames, {duration}ms', flush=True)
         fish_bytes = entries[-1]['bytes']
         assert all(item['bytes'] + fish_bytes <= 5_000_000 for item in entries[:2])
         manifest = {'schema': 1, 'duration_ms': SECONDS*1000, 'fps': FPS,
-                    'policy': 'Fixed palette; no dithering; local pigment/reflection motion; hero has 4px stationary inner band and 4px inward fade; static SVGs unchanged',
+                    'policy': 'Fixed five-color source; no dithering; only broken orbit and stars, hair tips, vertical seam, and fish reflection move; portrait and type remain fixed',
                     'runtime': {**json.loads((raster/'renderer.json').read_text()),
                                 'pillow': pillow_version, 'numpy': np.__version__}, 'assets': entries}
         (output/'motion-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')

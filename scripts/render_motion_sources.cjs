@@ -8,7 +8,7 @@ async function main() {
   if (!assets || !output) throw new Error('Usage: render_motion_sources.cjs ASSETS OUTPUT');
   for (const [name, width] of [['hero', 1024], ['hero-mobile', 768], ['work-fish', 320]]) {
     await sharp(path.join(assets, `${name}.svg`))
-      .resize({ width }).flatten({ background: '#111212' })
+      .resize({ width }).flatten({ background: '#11131A' })
       .png().toFile(path.join(output, `${name}.png`));
   }
   await fs.writeFile(path.join(output, 'renderer.json'), JSON.stringify({
