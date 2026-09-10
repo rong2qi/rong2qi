@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "candidate_label": "PROFILE-REFRACTED-20260910-02",
+  "style": "折光圣像 / refracted icon",
+  "method": "Original deterministic SVG geometry; no reference-image pixels, external fonts, or remote resources",
+  "palette": {
+    "night": "#11131A",
+    "bone": "#D3CBC2",
+    "jade": "#6F8983",
+    "rose": "#8D5660",
+    "glow": "#E7CBB4"
+  },
+  "generator": {
+    "file": "scripts/build_assets.py",
+    "sha256": "aec48d4238c8bc2e233d1bc863787a44fbe23ff947b1e04db957cf98ea16f342"
+  },
+  "assets": [
+    {
+      "file": "ashes-trace-mobile.svg",
+      "width": 1024,
+      "height": 308,
+      "bytes": 1514,
+      "sha256": "2ff3f9031a60badc306fcca7ed1d8a2cb483392248d3d27d00fd59ba8592bbf9"
+    },
+    {
+      "file": "ashes-trace.svg",
+      "width": 1024,
+      "height": 308,
+      "bytes": 1514,
+      "sha256": "020aadcf4774518eeca333b52a3e7c9bf86fd72bcb880d87ea97aaaed8f336c5"
+    },
+    {
+      "file": "hero-mobile.svg",
+      "width": 1024,
+      "height": 865,
+      "bytes": 5255,
+      "sha256": "b3442d1c7a134501a7e3284127855929dc8225c5d2bed0dded563cde221b1ee1"
+    },
+    {
+      "file": "hero.svg",
+      "width": 1024,
+      "height": 865,
+      "bytes": 5224,
+      "sha256": "8c6a0c66e3a18388875314a69b4b47722b2379c0a6afe34183c31a8549efdb59"
+    },
+    {
+      "file": "work-chief.svg",
+      "width": 320,
+      "height": 326,
+      "bytes": 1164,
+      "sha256": "9ee70333ab6fcf43b70f70d397d3ca0bbf3e6fd63951928ab4cb9af09ad56991"
+    },
+    {
+      "file": "work-fish.svg",
+      "width": 320,
+      "height": 326,
+      "bytes": 1113,
+      "sha256": "1fba4a9701ae3455673818d85e624de9e56263f0460eace492bcf962595d7672"
+    },
+    {
+      "file": "work-jinbao.svg",
+      "width": 320,
+      "height": 326,
+      "bytes": 1234,
+      "sha256": "f8fbf06ecd514a1e5bdcea445a05f45a26b0f02216debbc4a6e6b903d318fffb"
+    },
+    {
+      "file": "work-orchestrator.svg",
+      "width": 320,
+      "height": 326,
+      "bytes": 1273,
+      "sha256": "d9ddb34c8e1d0a4e4a33e33a7826187bde7c6819c368d8ba2850d46f1b0577b3"
+    },
+    {
+      "file": "work-speakloop.svg",
+      "width": 320,
+      "height": 326,
+      "bytes": 1068,
+      "sha256": "7ff7bbf00694c8d9b46264c844cc8c85fbe64ddaad76cab31c0c314eb1a096dc"
+    },
+    {
+      "file": "works-divider-mobile.svg",
+      "width": 1024,
+      "height": 92,
+      "bytes": 731,
+      "sha256": "b8cb6f1ed02b56c659b827644f2545842247813a8019365225644cfd35ae282d"
+    },
+    {
+      "file": "works-divider.svg",
+      "width": 1024,
+      "height": 68,
+      "bytes": 731,
+      "sha256": "52e3a7ed0c4e353ee8b169979d48447b210ba3f080af6278b2e63d47af3f8c40"
+    }
+  ]
+}

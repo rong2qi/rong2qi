@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="326" viewBox="0 0 320 326" role="img" aria-labelledby="title">
+<title id="title">fish-meditate</title>
+<rect width="320" height="326" fill="#11131A"/>
+<rect x="1" y="1" width="318" height="324" fill="none" stroke="#D3CBC2" stroke-opacity=".14"/>
+<g fill="#D3CBC2" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><g id="fragment-fish"><path d="M24 166C76 116 131 109 187 145C224 169 258 170 298 139" fill="none" stroke="#6F8983" stroke-width="4" stroke-opacity=".72"/>
+<path d="M25 183C87 151 136 157 183 183C225 206 264 202 298 177" fill="none" stroke="#D3CBC2" stroke-width="2" stroke-opacity=".4"/>
+<path d="M77 76A75 75 0 0 1 214 81" fill="none" stroke="#E7CBB4" stroke-width="3" stroke-opacity=".54"/>
+<circle cx="80" cy="75" r="3" fill="#8D5660"/></g>
+<rect x="8" y="8" width="304" height="219" fill="none" stroke="#D3CBC2" stroke-opacity=".24"/>
+<text x="12" y="260" font-size="28" letter-spacing=".2">fish-meditate</text>
+<path d="M12 296H88" stroke="#8D5660" stroke-width="2" stroke-opacity=".52"/></g>
+</svg>

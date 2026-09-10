@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="326" viewBox="0 0 320 326" role="img" aria-labelledby="title">
+<title id="title">SpeakLoop</title>
+<rect width="320" height="326" fill="#11131A"/>
+<rect x="1" y="1" width="318" height="324" fill="none" stroke="#D3CBC2" stroke-opacity=".14"/>
+<g fill="#D3CBC2" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"><g id="fragment-speakloop"><path d="M83 139A77 77 0 0 1 237 139" fill="none" stroke="#D3CBC2" stroke-width="5" stroke-opacity=".55"/>
+<path d="M96 139V197M224 139V197" stroke="#6F8983" stroke-width="15" stroke-linecap="round" stroke-opacity=".7"/>
+<path d="M132 91A55 55 0 0 1 209 109" fill="none" stroke="#8D5660" stroke-width="3" stroke-opacity=".52"/>
+<circle cx="160" cy="139" r="4" fill="#E7CBB4"/></g>
+<rect x="8" y="8" width="304" height="219" fill="none" stroke="#D3CBC2" stroke-opacity=".24"/>
+<text x="12" y="260" font-size="28" letter-spacing=".2">SpeakLoop</text>
+<path d="M12 296H88" stroke="#8D5660" stroke-width="2" stroke-opacity=".52"/></g>
+</svg>
