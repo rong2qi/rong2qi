@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "candidate_label": "PROFILE-REFRACTED-20260910-02",
+  "candidate_label": "PROFILE-REFRACTED-20260910-03",
   "style": "折光圣像 / refracted icon",
   "method": "Original deterministic SVG geometry; no reference-image pixels, external fonts, or remote resources",
   "palette": {
@@ -12,7 +12,7 @@
   },
   "generator": {
     "file": "scripts/build_assets.py",
-    "sha256": "aec48d4238c8bc2e233d1bc863787a44fbe23ff947b1e04db957cf98ea16f342"
+    "sha256": "8005295456faba42737b65a7023ec76ef42fad7e3e4051aeec15c375fd414d1b"
   },
   "assets": [
     {
@@ -20,7 +20,7 @@
       "width": 1024,
       "height": 308,
       "bytes": 1514,
-      "sha256": "2ff3f9031a60badc306fcca7ed1d8a2cb483392248d3d27d00fd59ba8592bbf9"
+      "sha256": "8d373fffe75ddd5b7564094512bda7eb55ca6881caacdf8a1f1592883762f583"
     },
     {
       "file": "ashes-trace.svg",
@@ -34,7 +34,7 @@
       "width": 1024,
       "height": 865,
       "bytes": 5255,
-      "sha256": "b3442d1c7a134501a7e3284127855929dc8225c5d2bed0dded563cde221b1ee1"
+      "sha256": "6f2cb988b7682068837aabaf5794d82ca3f64fcc17905d0d4ff0c036f593b8a6"
     },
     {
       "file": "hero.svg",
@@ -83,7 +83,7 @@
       "width": 1024,
       "height": 92,
       "bytes": 731,
-      "sha256": "b8cb6f1ed02b56c659b827644f2545842247813a8019365225644cfd35ae282d"
+      "sha256": "6b83a6d10b57162a2736a503a58c70465a122e317e891006120cbede1d270773"
     },
     {
       "file": "works-divider.svg",

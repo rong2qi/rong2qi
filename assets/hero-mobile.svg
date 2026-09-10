@@ -11,10 +11,10 @@
   </linearGradient>
 </defs>
 <rect x="2" y="2" width="1020" height="861" fill="url(#night-wash)"/>
-<g id="identity"><text x="42" y="50" font-size="46" letter-spacing="2">rong2qi</text></g>
-<g id="now-label"><text x="42" y="112" font-size="46" letter-spacing="3">now</text></g>
+<g id="identity"><text x="42" y="50" font-size="48" letter-spacing="2">rong2qi</text></g>
+<g id="now-label"><text x="42" y="112" font-size="48" letter-spacing="3">now</text></g>
 <path d="M42 79H57M43 166V318" fill="none" stroke="#D3CBC2" stroke-width="1" stroke-opacity=".42"/>
-<g id="hand-date" transform="rotate(-3 42 390)"><text x="42" y="390" font-size="46" font-style="italic" letter-spacing="2" fill="#D3CBC2" fill-opacity=".62">10 · 09 · 26</text></g>
+<g id="hand-date" transform="rotate(-3 42 390)"><text x="42" y="390" font-size="48" font-style="italic" letter-spacing="2" fill="#D3CBC2" fill-opacity=".62">10 · 09 · 26</text></g>
 <g id="seam"><path d="M676 1V864" stroke="url(#seam-light)" stroke-width="2"/></g>
 <g id="world" transform="translate(-210 -90) scale(1.27)">
   <g id="orbit" fill="none" stroke-linecap="round">

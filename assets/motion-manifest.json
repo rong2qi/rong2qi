@@ -68,9 +68,9 @@
     {
       "file": "hero-mobile-motion.gif",
       "source": "assets/hero-mobile.svg",
-      "source_sha256": "b3442d1c7a134501a7e3284127855929dc8225c5d2bed0dded563cde221b1ee1",
-      "sha256": "1a9f138233164f069ece0388c9f7763addc6f5098a26049a18e54211fde23f54",
-      "bytes": 903088,
+      "source_sha256": "6f2cb988b7682068837aabaf5794d82ca3f64fcc17905d0d4ff0c036f593b8a6",
+      "sha256": "da36df28094b2824664d745bf720d8271570e5ed3c3ca0377967fdfae185b446",
+      "bytes": 910900,
       "width": 768,
       "height": 649,
       "frames": 120,
