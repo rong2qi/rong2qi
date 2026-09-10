@@ -99,7 +99,7 @@ def main():
     assert manifest_path.is_file(), 'Missing deterministic static asset manifest.'
     manifest=json.loads(manifest_path.read_text())
     assert manifest['schema'] == 1
-    assert manifest['candidate_label'] == 'PROFILE-REFRACTED-20260910-02'
+    assert manifest['candidate_label'] == 'PROFILE-REFRACTED-20260910-03'
     assert manifest['style'] == '折光圣像 / refracted icon'
     assert set(manifest['palette'].values()) == PALETTE
     assert manifest['method'] == (
@@ -133,9 +133,9 @@ def main():
     mobile_identity=element_by_id(mobile, 'identity')
     mobile_now=element_by_id(mobile, 'now-label')
     mobile_date=element_by_id(mobile, 'hand-date')
-    # Live GitHub branch rendering exposes a 324px README canvas at a 390px
-    # viewport; validate the displayed size against that observed surface.
-    mobile_scale=324/1024
+    # The live public profile exposes a 308px README canvas at a 390px
+    # viewport; validate against the narrowest observed surface.
+    mobile_scale=308/1024
     for group in (mobile_identity, mobile_now, mobile_date):
         text=next(element for element in group.iter() if local_name(element) == 'text')
         assert float(text.attrib['font-size'])*mobile_scale >= 14, (
