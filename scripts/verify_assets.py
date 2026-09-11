@@ -60,7 +60,7 @@ def main():
 
     assert len(parser.images) == 8, "Expected hero, works, five project fragments and footer."
     assert len(parser.sources) == 5, "Hero and section labels need responsive sources."
-    assert len(parser.pictures) == 3
+    assert len(parser.pictures) == 4
     hero_picture = parser.pictures[0]
     assert hero_picture["image"]["src"] == "assets/hero-motion.gif"
     assert [
@@ -78,6 +78,14 @@ def main():
         "image": {"src": "assets/works.jpg", "alt": "works", "width": "100%"},
     }
     assert parser.pictures[2] == {
+        "sources": [],
+        "image": {
+            "src": "assets/work-fish.jpg",
+            "alt": "fish-meditate — 河流里的暖光",
+            "width": "150",
+        },
+    }, "GitHub auto-links a bare img; picture keeps fish-meditate visual-only."
+    assert parser.pictures[3] == {
         "sources": [
             {"media": "(max-width: 768px)", "srcset": "assets/ashes-trace-mobile.jpg"}
         ],
@@ -114,7 +122,7 @@ def main():
     assert len(parser.links) + 2 == 6
     card_group = readme.split("<p>", 1)[1].split("</p>", 1)[0]
     assert card_group.count("<img ") == 5
-    assert card_group.lstrip().startswith('<img src="assets/work-fish.jpg"')
+    assert card_group.lstrip().startswith('<picture><img src="assets/work-fish.jpg"')
     assert "女娲" in parser.images[0]["alt"] and "五色石" in parser.images[0]["alt"]
 
     master = ASSETS / "source/nuwa-a-sky-rift.png"
