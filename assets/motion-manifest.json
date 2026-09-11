@@ -1,153 +1,137 @@
 {
-  "schema": 1,
+  "schema": 2,
+  "candidate_label": "PROFILE-NUWA-A-20260911-01",
   "duration_ms": 12000,
   "fps": 10,
-  "policy": "Fixed five-color source; no dithering; only broken orbit and stars, hair tips, vertical seam, and fish reflection move; portrait and type remain fixed",
+  "frames": 120,
+  "palette_colors": 128,
+  "reveal_levels": 12,
+  "policy": "One fixed Candidate A composition; per-pixel light reveal travels from the five-colored stone through the repaired sky and river; no crossfade, character morph or spatial warp. Reduced-motion sources show the full selected A painting.",
+  "timeline": {
+    "quiet_hold_ms": 1200,
+    "reveal_complete_ms": 6000,
+    "full_hold_until_ms": 8400,
+    "return_complete_ms": 12000
+  },
   "runtime": {
-    "node": "v24.19.0",
-    "sharp": "0.35.4",
-    "librsvg": "2.62.91",
     "pillow": "12.3.0",
     "numpy": "2.3.5"
+  },
+  "static_manifest_sha256": "3f359b49e35095e3c644b3908b2d294972e069a24a10ec3b8d67dadd0c7a3cf7",
+  "generator": {
+    "file": "scripts/build_motion.py",
+    "sha256": "f3ac0fa834118aca1febe5778d7e7960e7c7853bacbe3b1f7a987639079eb8a9"
   },
   "assets": [
     {
       "file": "hero-motion.gif",
-      "source": "assets/hero.svg",
-      "source_sha256": "8c6a0c66e3a18388875314a69b4b47722b2379c0a6afe34183c31a8549efdb59",
-      "sha256": "614e934fbdd6d17e31a685cc2bf569de50b606b77c8335da3ecd3f24c901dbd0",
-      "bytes": 954879,
-      "width": 1024,
-      "height": 865,
+      "source": "assets/source/nuwa-a-sky-rift.png",
+      "source_sha256": "2f61ae115f1c3f6924bb7db23868d8324f73754bb632d60cb91760e609b965c1",
+      "static_fallback": "assets/hero.jpg",
+      "static_fallback_sha256": "87e107c2905e4864b10d4e86fe6e0978f84b7ca160ada108b0191ecc0cb487ba",
+      "sha256": "a31bd768de8ba0bf1b00d2efa33e997f1a8a9408396599145c5ef2a5beb779cf",
+      "bytes": 4414015,
+      "width": 720,
+      "height": 480,
       "frames": 120,
       "duration_ms": 12000,
+      "frame_duration_ms": 100,
       "loop": 0,
-      "source_viewbox": [
-        1024,
-        865
+      "byte_budget": 5200000,
+      "frame_cadence_pixel": [
+        1,
+        478
       ],
-      "motion_regions": [
-        [
-          540,
-          65,
-          990,
-          570
+      "frame_cadence_source_pixels": 1,
+      "motion_region": [
+        0,
+        0,
+        720,
+        480
+      ],
+      "spatial_motion_pixels": 0,
+      "character_geometry": "fixed Candidate A pixels; light and color only",
+      "labels_fixed": true,
+      "light_path": {
+        "stone": [
+          0.73,
+          0.43
         ],
-        [
-          500,
-          480,
-          670,
-          720
+        "sky_seam_end": [
+          0.33,
+          0.02
         ],
-        [
-          860,
-          480,
-          1020,
-          720
-        ],
-        [
-          668,
-          0,
-          684,
-          865
+        "river": [
+          [
+            0.6,
+            0.51
+          ],
+          [
+            0.48,
+            0.68
+          ],
+          [
+            0.34,
+            0.84
+          ]
         ]
-      ],
-      "motion_limits": {
-        "hair_tip_translation_source_px": {
-          "left": 2.4,
-          "right": 2.1
-        },
-        "orbit_translation_source_px": 0,
-        "star_translation_source_px": 0,
-        "seam_translation_source_px": 0
       },
-      "byte_budget": 4500000,
-      "stationary_inner_band_source_px": 4,
-      "inward_fade_source_px": 4
+      "loaded_bytes_with_static_sections": 5012376
     },
     {
       "file": "hero-mobile-motion.gif",
-      "source": "assets/hero-mobile.svg",
-      "source_sha256": "6f2cb988b7682068837aabaf5794d82ca3f64fcc17905d0d4ff0c036f593b8a6",
-      "sha256": "da36df28094b2824664d745bf720d8271570e5ed3c3ca0377967fdfae185b446",
-      "bytes": 910900,
-      "width": 768,
-      "height": 649,
+      "source": "assets/source/nuwa-a-sky-rift.png",
+      "source_sha256": "2f61ae115f1c3f6924bb7db23868d8324f73754bb632d60cb91760e609b965c1",
+      "static_fallback": "assets/hero-mobile.jpg",
+      "static_fallback_sha256": "a502545c747cf0282a7faaba1585d9144927e373bbe9b7bb496ac290b967743a",
+      "sha256": "1ee70e4f21c3efcf54f0605675865b5393c66ce332270b92440b5da37aaa117a",
+      "bytes": 4440130,
+      "width": 560,
+      "height": 560,
       "frames": 120,
       "duration_ms": 12000,
+      "frame_duration_ms": 100,
       "loop": 0,
-      "source_viewbox": [
-        1024,
-        865
+      "byte_budget": 5200000,
+      "frame_cadence_pixel": [
+        1,
+        558
       ],
-      "motion_regions": [
-        [
-          510,
-          10,
-          1000,
-          635
+      "frame_cadence_source_pixels": 1,
+      "motion_region": [
+        0,
+        0,
+        560,
+        560
+      ],
+      "spatial_motion_pixels": 0,
+      "character_geometry": "fixed Candidate A pixels; light and color only",
+      "labels_fixed": true,
+      "light_path": {
+        "stone": [
+          0.74,
+          0.43
         ],
-        [
-          425,
-          515,
-          650,
-          825
+        "sky_seam_end": [
+          0.12,
+          0.02
         ],
-        [
-          880,
-          515,
-          1024,
-          825
-        ],
-        [
-          668,
-          0,
-          684,
-          865
+        "river": [
+          [
+            0.56,
+            0.51
+          ],
+          [
+            0.4,
+            0.68
+          ],
+          [
+            0.22,
+            0.84
+          ]
         ]
-      ],
-      "motion_limits": {
-        "hair_tip_translation_source_px": {
-          "left": 2.4,
-          "right": 2.1
-        },
-        "orbit_translation_source_px": 0,
-        "star_translation_source_px": 0,
-        "seam_translation_source_px": 0
       },
-      "byte_budget": 4500000,
-      "stationary_inner_band_source_px": 4,
-      "inward_fade_source_px": 4
-    },
-    {
-      "file": "work-fish-motion.gif",
-      "source": "assets/work-fish.svg",
-      "source_sha256": "1fba4a9701ae3455673818d85e624de9e56263f0460eace492bcf962595d7672",
-      "sha256": "d647827a09834d047af8c75af2a2b44e64a39a8a8530e190291b0dca61e4d5c5",
-      "bytes": 167304,
-      "width": 320,
-      "height": 326,
-      "frames": 120,
-      "duration_ms": 12000,
-      "loop": 0,
-      "source_viewbox": [
-        320,
-        326
-      ],
-      "motion_regions": [
-        [
-          10,
-          10,
-          310,
-          226
-        ]
-      ],
-      "motion_limits": {
-        "reflection_translation_source_px": 1.9
-      },
-      "byte_budget": 500000,
-      "stationary_inner_band_source_px": 0,
-      "inward_fade_source_px": 0
+      "loaded_bytes_with_static_sections": 5038491
     }
   ]
 }

@@ -1,96 +1,145 @@
 {
-  "schema": 1,
-  "candidate_label": "PROFILE-REFRACTED-20260910-03",
-  "style": "折光圣像 / refracted icon",
-  "method": "Original deterministic SVG geometry; no reference-image pixels, external fonts, or remote resources",
-  "palette": {
-    "night": "#11131A",
-    "bone": "#D3CBC2",
-    "jade": "#6F8983",
-    "rose": "#8D5660",
-    "glow": "#E7CBB4"
+  "schema": 2,
+  "candidate_label": "PROFILE-NUWA-A-20260911-01",
+  "style": "女娲 · A 天裂 / Nüwa sky rift",
+  "method": "User-selected built-in ImageGen master A; deterministic local crops, tone-preserving raster derivatives and minimal rasterized labels; no remote resources",
+  "source": {
+    "file": "assets/source/nuwa-a-sky-rift.png",
+    "sha256": "2f61ae115f1c3f6924bb7db23868d8324f73754bb632d60cb91760e609b965c1",
+    "width": 1536,
+    "height": 1024,
+    "origin": "Codex built-in ImageGen, selected by the user with: A最好看。",
+    "prompt_summary": "Original Nüwa repairing the sky: feminine upper body and serpentine lower form on the right, muted five-colored stone, dark-red repair thread, dark negative space on the left, mineral sky, river and clay figures; painterly paper grain; no copied figure, clothing, composition, signature or watermark."
+  },
+  "labels": {
+    "desktop_source_width": 1200,
+    "mobile_source_width": 768,
+    "public_mobile_canvas_width": 308,
+    "mobile_min_font_px": 36,
+    "section_source_width": 1024,
+    "desktop_section_font_px": 27,
+    "mobile_section_font_px": 48,
+    "card_source_width": 480,
+    "card_render_width": 150,
+    "card_font_px": 45
+  },
+  "fonts": [
+    {
+      "file": "/System/Library/Fonts/SFNS.ttf",
+      "sha256": "2bfd40dc72e6759e248f82a52a40d551338979fffc9b5c070e685b4b7ad19e66"
+    },
+    {
+      "file": "/System/Library/Fonts/Noteworthy.ttc",
+      "sha256": "7785163d9b841cc586d1e696fb4c16a657e16049b092e488a51003e74be8ec21"
+    }
+  ],
+  "runtime": {
+    "pillow": "12.3.0",
+    "numpy": "2.3.5"
   },
   "generator": {
     "file": "scripts/build_assets.py",
-    "sha256": "8005295456faba42737b65a7023ec76ef42fad7e3e4051aeec15c375fd414d1b"
+    "sha256": "e44c152b7a3db1b4ffc021f7763cca20e50eeb5bc822aeec47c88a70efda17cc"
   },
   "assets": [
     {
-      "file": "ashes-trace-mobile.svg",
+      "file": "hero.jpg",
+      "role": "desktop full A composition and reduced-motion fallback",
+      "format": "JPEG",
+      "width": 1200,
+      "height": 800,
+      "bytes": 315352,
+      "sha256": "87e107c2905e4864b10d4e86fe6e0978f84b7ca160ada108b0191ecc0cb487ba"
+    },
+    {
+      "file": "hero-mobile.jpg",
+      "role": "mobile A crop retaining sky seam, Nüwa, stone, river and clay figures",
+      "format": "JPEG",
+      "width": 768,
+      "height": 768,
+      "bytes": 226282,
+      "sha256": "a502545c747cf0282a7faaba1585d9144927e373bbe9b7bb496ac290b967743a"
+    },
+    {
+      "file": "works.jpg",
+      "role": "painterly section marker",
+      "format": "JPEG",
       "width": 1024,
-      "height": 308,
-      "bytes": 1514,
-      "sha256": "8d373fffe75ddd5b7564094512bda7eb55ca6881caacdf8a1f1592883762f583"
+      "height": 108,
+      "bytes": 22218,
+      "sha256": "8ae70f8382c7da3d7a46b281aa9a25d8ebbd00909a47e2c00fab68deae1da1f5"
     },
     {
-      "file": "ashes-trace.svg",
+      "file": "works-mobile.jpg",
+      "role": "painterly section marker with mobile-readable label",
+      "format": "JPEG",
       "width": 1024,
-      "height": 308,
-      "bytes": 1514,
-      "sha256": "020aadcf4774518eeca333b52a3e7c9bf86fd72bcb880d87ea97aaaed8f336c5"
+      "height": 108,
+      "bytes": 23640,
+      "sha256": "7c8a1b976e8b64eb0c8c2354fe72956bd9d8f22e76055ad727c6b77ba2fc97f4"
     },
     {
-      "file": "hero-mobile.svg",
+      "file": "work-fish.jpg",
+      "role": "river light",
+      "format": "JPEG",
+      "width": 480,
+      "height": 600,
+      "bytes": 78634,
+      "sha256": "61149541c4937c128789bd56348fb48047b3d6cc605e78161b96d1332250f058"
+    },
+    {
+      "file": "work-jinbao.jpg",
+      "role": "clay companions and distant water",
+      "format": "JPEG",
+      "width": 480,
+      "height": 600,
+      "bytes": 91670,
+      "sha256": "074253c515cc94dd6a9ec16957d3f747b62ddb7ed00fd9e4fe494d701fd1b5f8"
+    },
+    {
+      "file": "work-orchestrator.jpg",
+      "role": "red thread, mineral fragments and repaired sky",
+      "format": "JPEG",
+      "width": 480,
+      "height": 600,
+      "bytes": 85963,
+      "sha256": "bd9318bdbad6e3af75ed0a7d75ff407a3d01a822ea1b008ad974e8bbe0f2f4e7"
+    },
+    {
+      "file": "work-speakloop.jpg",
+      "role": "flowing hair and returning warm light",
+      "format": "JPEG",
+      "width": 480,
+      "height": 600,
+      "bytes": 94037,
+      "sha256": "23f23a4768856840c374569e9c7a878758dba72510aa0e1d11aff001625c6db4"
+    },
+    {
+      "file": "work-chief.jpg",
+      "role": "fractured sky and mountains",
+      "format": "JPEG",
+      "width": 480,
+      "height": 600,
+      "bytes": 60443,
+      "sha256": "559d346ab1884b8320f17815af82ccb72f713d580f98d946431344e8617b9499"
+    },
+    {
+      "file": "ashes-trace.jpg",
+      "role": "dark river and mountain trace with open writing space",
+      "format": "JPEG",
       "width": 1024,
-      "height": 865,
-      "bytes": 5255,
-      "sha256": "6f2cb988b7682068837aabaf5794d82ca3f64fcc17905d0d4ff0c036f593b8a6"
+      "height": 283,
+      "bytes": 70072,
+      "sha256": "b06c55d62cf60a28de6d9fa4a9543e86b65fb8e819ef2529f8481ff082c1a9ab"
     },
     {
-      "file": "hero.svg",
+      "file": "ashes-trace-mobile.jpg",
+      "role": "dark river and mountain trace with mobile-readable labels",
+      "format": "JPEG",
       "width": 1024,
-      "height": 865,
-      "bytes": 5224,
-      "sha256": "8c6a0c66e3a18388875314a69b4b47722b2379c0a6afe34183c31a8549efdb59"
-    },
-    {
-      "file": "work-chief.svg",
-      "width": 320,
-      "height": 326,
-      "bytes": 1164,
-      "sha256": "9ee70333ab6fcf43b70f70d397d3ca0bbf3e6fd63951928ab4cb9af09ad56991"
-    },
-    {
-      "file": "work-fish.svg",
-      "width": 320,
-      "height": 326,
-      "bytes": 1113,
-      "sha256": "1fba4a9701ae3455673818d85e624de9e56263f0460eace492bcf962595d7672"
-    },
-    {
-      "file": "work-jinbao.svg",
-      "width": 320,
-      "height": 326,
-      "bytes": 1234,
-      "sha256": "f8fbf06ecd514a1e5bdcea445a05f45a26b0f02216debbc4a6e6b903d318fffb"
-    },
-    {
-      "file": "work-orchestrator.svg",
-      "width": 320,
-      "height": 326,
-      "bytes": 1273,
-      "sha256": "d9ddb34c8e1d0a4e4a33e33a7826187bde7c6819c368d8ba2850d46f1b0577b3"
-    },
-    {
-      "file": "work-speakloop.svg",
-      "width": 320,
-      "height": 326,
-      "bytes": 1068,
-      "sha256": "7ff7bbf00694c8d9b46264c844cc8c85fbe64ddaad76cab31c0c314eb1a096dc"
-    },
-    {
-      "file": "works-divider-mobile.svg",
-      "width": 1024,
-      "height": 92,
-      "bytes": 731,
-      "sha256": "6b83a6d10b57162a2736a503a58c70465a122e317e891006120cbede1d270773"
-    },
-    {
-      "file": "works-divider.svg",
-      "width": 1024,
-      "height": 68,
-      "bytes": 731,
-      "sha256": "52e3a7ed0c4e353ee8b169979d48447b210ba3f080af6278b2e63d47af3f8c40"
+      "height": 283,
+      "bytes": 71684,
+      "sha256": "bc941efb512b2b09bc736b746a6245a15665cd00cf23b42bb20e30bc825a4918"
     }
   ]
 }
