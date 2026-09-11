@@ -13,7 +13,7 @@
 </picture>
 
 <p>
-<img src="assets/work-fish.jpg" alt="fish-meditate — 河流里的暖光" width="150">
+<picture><img src="assets/work-fish.jpg" alt="fish-meditate — 河流里的暖光" width="150"></picture>
 <a href="https://github.com/rong2qi/desktop-pet-jinbao"><img src="assets/work-jinbao.jpg" alt="desktop-pet-jinbao — 泥人伙伴与远处水光" width="150"></a>
 <a href="https://github.com/rong2qi/prompt-agent-orchestrator"><img src="assets/work-orchestrator.jpg" alt="prompt-agent-orchestrator — 红线、矿石与补天裂隙" width="150"></a>
 <a href="https://github.com/rong2qi/SpeakLoop"><img src="assets/work-speakloop.jpg" alt="SpeakLoop — 发丝与回旋的暖光" width="150"></a>
