@@ -1,167 +1,262 @@
 #!/usr/bin/env python3
-"""Verify GIF integrity, bounded motion, seam continuity and optional regeneration."""
+"""Verify fixed-composition light reveal, timing, loop, byte budget and regeneration."""
+
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import argparse
 import hashlib
 import importlib.util
 import json
-import os
 import subprocess
 import sys
 
 import numpy as np
 from PIL import Image
 
+
 ROOT = Path(__file__).resolve().parents[1]
+ASSETS = ROOT / "assets"
+MASTER_SHA256 = "2f61ae115f1c3f6924bb7db23868d8324f73754bb632d60cb91760e609b965c1"
 
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def luminance(rgb):
+    return rgb @ np.array([0.2126, 0.7152, 0.0722], dtype=np.float32)
+
+
+def gradient(gray):
+    gx = np.zeros_like(gray)
+    gy = np.zeros_like(gray)
+    gx[:, 1:] = np.abs(gray[:, 1:] - gray[:, :-1])
+    gy[1:, :] = np.abs(gray[1:, :] - gray[:-1, :])
+    return np.hypot(gx, gy)
+
+
+def correlation(left, right):
+    a = left.astype(np.float64).ravel()
+    b = right.astype(np.float64).ravel()
+    a -= a.mean()
+    b -= b.mean()
+    denominator = np.sqrt(np.dot(a, a) * np.dot(b, b))
+    return float(np.dot(a, b) / denominator) if denominator else 0.0
+
+
+def shifted_correlation(reference, candidate, dx, dy):
+    height, width = reference.shape
+    x0 = max(0, dx)
+    x1 = min(width, width + dx)
+    y0 = max(0, dy)
+    y1 = min(height, height + dy)
+    return correlation(
+        reference[y0:y1, x0:x1],
+        candidate[y0 - dy:y1 - dy, x0 - dx:x1 - dx],
+    )
+
+
 def verify():
-    manifest = json.loads((ROOT/'assets/motion-manifest.json').read_text())
-    assert manifest['duration_ms'] == 12_000 and manifest['fps'] == 10
-    assert manifest['policy'] == (
-        'Fixed five-color source; no dithering; only broken orbit and stars, '
-        'hair tips, vertical seam, and fish reflection move; portrait and type remain fixed')
+    manifest_path = ASSETS / "motion-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["schema"] == 2
+    assert manifest["candidate_label"] == "PROFILE-NUWA-A-20260911-01"
+    assert manifest["duration_ms"] == 12_000
+    assert manifest["fps"] == 10 and manifest["frames"] == 120
+    assert manifest["palette_colors"] == 128
+    assert manifest["reveal_levels"] == 12
+    assert manifest["timeline"] == {
+        "quiet_hold_ms": 1200,
+        "reveal_complete_ms": 6000,
+        "full_hold_until_ms": 8400,
+        "return_complete_ms": 12000,
+    }
+    assert manifest["policy"] == (
+        "One fixed Candidate A composition; per-pixel light reveal travels from the five-colored "
+        "stone through the repaired sky and river; no crossfade, character morph or spatial warp. "
+        "Reduced-motion sources show the full selected A painting."
+    )
+    assert manifest["generator"] == {
+        "file": "scripts/build_motion.py",
+        "sha256": sha(ROOT / "scripts/build_motion.py"),
+    }
+    assert manifest["static_manifest_sha256"] == sha(ASSETS / "asset-manifest.json")
+
     expected = {
-        'hero-motion.gif': {
-            'size': (1024, 865),
-            'regions': [[540, 65, 990, 570], [500, 480, 670, 720],
-                        [860, 480, 1020, 720], [668, 0, 684, 865]],
-            'portrait_guard': [675, 145, 855, 485],
-            'motion_limits': {
-                'hair_tip_translation_source_px': {'left': 2.4, 'right': 2.1},
-                'orbit_translation_source_px': 0,
-                'star_translation_source_px': 0,
-                'seam_translation_source_px': 0,
-            },
+        "hero-motion.gif": {
+            "source": "assets/source/nuwa-a-sky-rift.png",
+            "static_fallback": "assets/hero.jpg",
+            "size": (720, 480),
+            "cadence": [1, 478],
+            "mobile": False,
         },
-        'hero-mobile-motion.gif': {
-            'size': (768, 649),
-            'regions': [[510, 10, 1000, 635], [425, 515, 650, 825],
-                        [880, 515, 1024, 825], [668, 0, 684, 865]],
-            'portrait_guard': [645, 90, 880, 535],
-            'motion_limits': {
-                'hair_tip_translation_source_px': {'left': 2.4, 'right': 2.1},
-                'orbit_translation_source_px': 0,
-                'star_translation_source_px': 0,
-                'seam_translation_source_px': 0,
-            },
-        },
-        'work-fish-motion.gif': {
-            'size': (320, 326),
-            'regions': [[10, 10, 310, 226]],
-            'portrait_guard': None,
-            'motion_limits': {'reflection_translation_source_px': 1.9},
+        "hero-mobile-motion.gif": {
+            "source": "assets/source/nuwa-a-sky-rift.png",
+            "static_fallback": "assets/hero-mobile.jpg",
+            "size": (560, 560),
+            "cadence": [1, 558],
+            "mobile": True,
         },
     }
-    spec = importlib.util.spec_from_file_location('motion_builder', ROOT/'scripts/build_motion.py')
-    builder = importlib.util.module_from_spec(spec); spec.loader.exec_module(builder)
-    assert builder.LEFT_HAIR_SHIFT_SOURCE_PX == 2.4
-    assert builder.RIGHT_HAIR_SHIFT_SOURCE_PX == 2.1
-    assert builder.FISH_REFLECTION_SHIFT_SOURCE_PX == 1.9
-    assert {a['file'] for a in manifest['assets']} == set(expected)
-    results = []
-    for item in manifest['assets']:
-        is_hero = item['file'].startswith('hero')
-        contract = expected[item['file']]
-        assert item['motion_regions'] == contract['regions'], 'Approved region drift'
-        assert item['motion_limits'] == contract['motion_limits'], 'Approved motion limit drift'
-        if is_hero:
-            assert max(item['motion_limits']['hair_tip_translation_source_px'].values()) <= 3
-        assert item['stationary_inner_band_source_px'] == (4 if is_hero else 0)
-        assert item['inward_fade_source_px'] == (4 if is_hero else 0)
-        path = ROOT/'assets'/item['file']
-        source = (ROOT/item['source']).resolve()
-        assert source.is_relative_to((ROOT/'assets').resolve()) and source.suffix == '.svg'
-        assert sha(source) == item['source_sha256'], 'Static source drift'
-        assert sha(path) == item['sha256'], 'GIF drift'
-        assert path.stat().st_size == item['bytes'] <= item['byte_budget']
+    assert {item["file"] for item in manifest["assets"]} == set(expected)
+
+    static_manifest = json.loads((ASSETS / "asset-manifest.json").read_text(encoding="utf-8"))
+    shared_static_bytes = sum(
+        item["bytes"]
+        for item in static_manifest["assets"]
+        if item["file"] not in {"hero.jpg", "hero-mobile.jpg"}
+    )
+    reports = []
+    builder_spec = importlib.util.spec_from_file_location(
+        "nuwa_static_builder", ROOT / "scripts/build_assets.py"
+    )
+    static_builder = importlib.util.module_from_spec(builder_spec)
+    builder_spec.loader.exec_module(static_builder)
+    for item in manifest["assets"]:
+        contract = expected[item["file"]]
+        path = ASSETS / item["file"]
+        source = ROOT / item["source"]
+        static_fallback = ROOT / item["static_fallback"]
+        assert item["source"] == contract["source"]
+        assert source.is_file() and source.suffix == ".png"
+        assert item["source_sha256"] == sha(source)
+        assert item["source_sha256"] == MASTER_SHA256
+        assert item["static_fallback"] == contract["static_fallback"]
+        assert item["static_fallback_sha256"] == sha(static_fallback)
+        assert item["sha256"] == sha(path)
+        assert item["bytes"] == path.stat().st_size <= item["byte_budget"]
+        assert item["frame_cadence_pixel"] == contract["cadence"]
+        assert item["frame_cadence_source_pixels"] == 1
+        assert item["motion_region"] == [0, 0, *contract["size"]]
+        assert item["spatial_motion_pixels"] == 0
+        assert item["character_geometry"] == "fixed Candidate A pixels; light and color only"
+        assert item["labels_fixed"] is True
+        assert item["loaded_bytes_with_static_sections"] == item["bytes"] + shared_static_bytes
+        assert item["loaded_bytes_with_static_sections"] <= 6_500_000
+
+        with Image.open(static_fallback) as static_image:
+            static_rgb = np.asarray(
+                static_image.convert("RGB").resize(contract["size"], Image.Resampling.LANCZOS),
+                dtype=np.float32,
+            )
+        label_overlay = np.asarray(
+            static_builder.hero_label_overlay(contract["size"], contract["mobile"])
+        )
+        label_mask = label_overlay[..., 3] > 0
         with Image.open(path) as gif:
-            assert gif.format == 'GIF' and gif.size == contract['size']
-            assert gif.info.get('loop') == 0 and gif.n_frames == 120
-            width, height = gif.size
-            yy, xx = np.mgrid[:height, :width]
-            vw, vh = item['source_viewbox']
-            x, y = xx*vw/width, yy*vh/height
-            masks = [(x>=x0)&(x<x1)&(y>=y0)&(y<y1)
-                     for x0,y0,x1,y1 in item['motion_regions']]
-            allowed = np.logical_or.reduce(masks)
-            portrait_guard = np.zeros((height, width), dtype=bool)
-            if contract['portrait_guard']:
-                x0, y0, x1, y1 = contract['portrait_guard']
-                portrait_guard = (x>=x0)&(x<x1)&(y>=y0)&(y<y1)
-            guard = np.zeros((height, width), dtype=bool)
-            if is_hero:
-                interior = np.zeros((height, width), dtype=bool)
-                for mask, (x0, y0, x1, y1) in zip(masks, item['motion_regions']):
-                    distance = np.minimum.reduce([x-x0, x1-x, y-y0, y1-y])
-                    interior |= mask & (distance > 4)
-                # Guard the outer edge of the approved union. A rectangle edge
-                # that falls inside another approved region is not an external
-                # boundary and must not mask valid overlapping motion.
-                guard = allowed & ~interior
-            counts = np.zeros(len(masks), dtype='int64')
-            first = np.asarray(gif.convert('RGB')).copy()
-            previous = first
-            durations, differences, observed = [], [], []
+            assert gif.format == "GIF" and gif.size == contract["size"]
+            assert gif.info.get("loop") == 0 and gif.n_frames == 120
+            durations = []
+            means = []
+            selected = {}
+            adjacent_changed = []
+            previous = None
+            first = None
             for index in range(gif.n_frames):
                 gif.seek(index)
-                durations.append(gif.info['duration'])
-                current = np.asarray(gif.convert('RGB')).copy()
-                changed = np.any(current != first, axis=2)
-                assert not np.any(changed & ~allowed), f'{path.name}: motion outside approved regions'
-                assert not np.any(changed & guard), f'{path.name}: motion inside stationary edge band'
-                assert not np.any(changed & portrait_guard), f'{path.name}: portrait must remain fixed'
-                for n, mask in enumerate(masks):
-                    counts[n] = max(counts[n], np.count_nonzero(changed & mask))
-                if index:
-                    differences.append(float(np.abs(current.astype('int16') - previous)[allowed].mean()))
-                if index in (0, 30, 60, 90):
-                    observed.append({'time_ms': index*100,
-                                     'changed_pixels': int(np.count_nonzero(changed)),
-                                     'mean_change_in_regions': float(np.abs(current.astype('int16')-first)[allowed].mean())})
+                durations.append(gif.info["duration"])
+                current = np.asarray(gif.convert("RGB"), dtype=np.float32)
+                means.append(float(luminance(current).mean()))
+                if index in {0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 119}:
+                    selected[index] = current.copy()
+                if first is None:
+                    first = current.copy()
+                else:
+                    assert np.array_equal(current[label_mask], first[label_mask]), (
+                        "Identity, now and date labels must remain pixel-still."
+                    )
+                if previous is not None:
+                    adjacent_changed.append(int(np.count_nonzero(np.any(current != previous, axis=2))))
                 previous = current
-            closing = float(np.abs(previous.astype('int16') - first)[allowed].mean())
-            assert sum(durations) == 12_000 and set(durations) == {100}
-            assert np.all(counts > (20 if is_hero else 100)), f'{path.name}: an approved region does not visibly change'
-            assert observed[1]['changed_pixels'] > 100, f'{path.name}: no motion within three seconds'
-            assert closing <= max(differences)*1.5 + .01, f'{path.name}: abrupt loop seam'
-            results.append({'file': path.name, 'bytes': item['bytes'], 'frames': gif.n_frames,
-                            'duration_ms': sum(durations), 'static_region_changes': 0,
-                            'stationary_inner_band_changes': 0,
-                            'protected_portrait_changes': 0 if is_hero else None,
-                            'max_changed_pixels_per_region': [int(c) for c in counts],
-                            'max_adjacent_frame_mean_delta': max(differences),
-                            'loop_seam_mean_delta': closing, 'samples': observed})
-    fish = next(r['bytes'] for r in results if r['file']=='work-fish-motion.gif')
-    totals = {r['file']: r['bytes']+fish for r in results if r['file'].startswith('hero')}
-    assert max(totals.values()) <= 5_000_000
-    return {'status': 'PASS', 'decoded_motion': results, 'animated_bytes_by_hero': totals}
+            last = previous
+
+        assert set(durations) == {100} and sum(durations) == 12_000
+        assert min(adjacent_changed) >= 1, "Quantized hold frames were coalesced or duplicated."
+        assert float(np.abs(first - last).mean()) <= 0.02, "Abrupt loop seam"
+        assert selected[60].mean() > selected[0].mean() + 18, "B-to-A reveal is not visible"
+        assert float(np.abs(selected[60] - static_rgb).mean()) < 8.0, (
+            "Bright state no longer matches selected A."
+        )
+
+        rising = [means[index] for index in (12, 24, 36, 48, 60)]
+        falling = [means[index] for index in (84, 96, 108, 119)]
+        # The traveling warm front may overshoot the settled A exposure by up
+        # to one luma value; larger reversals still fail the reveal contract.
+        assert all(later >= earlier - 1.0 for earlier, later in zip(rising, rising[1:])), rising
+        assert all(later <= earlier + 0.5 for earlier, later in zip(falling, falling[1:])), falling
+        assert max(abs(means[index] - means[60]) for index in (60, 72, 84)) < 1.2
+
+        static_edges = gradient(luminance(static_rgb))
+        peak_edges = gradient(luminance(selected[60]))
+        quiet_edges = gradient(luminance(selected[0]))
+        peak_zero = correlation(static_edges, peak_edges)
+        peak_shifted = max(
+            shifted_correlation(static_edges, peak_edges, dx, dy)
+            for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2))
+        )
+        quiet_zero = correlation(static_edges, quiet_edges)
+        quiet_shifted = max(
+            shifted_correlation(static_edges, quiet_edges, dx, dy)
+            for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2))
+        )
+        assert peak_zero > 0.84 and peak_zero >= peak_shifted + 0.30, (
+            "Bright-state structure shifted away from Candidate A."
+        )
+        assert quiet_zero > 0.60 and quiet_zero >= quiet_shifted + 0.20, (
+            "Quiet-state structure suggests a morph or spatial warp."
+        )
+
+        reports.append(
+            {
+                "file": item["file"],
+                "bytes": item["bytes"],
+                "frames": 120,
+                "duration_ms": 12_000,
+                "loop_seam_mean_delta": float(np.abs(first - last).mean()),
+                "quiet_to_full_luma_delta": means[60] - means[0],
+                "full_to_static_mean_delta": float(np.abs(selected[60] - static_rgb).mean()),
+                "peak_edge_alignment": peak_zero,
+                "quiet_edge_alignment": quiet_zero,
+                "fixed_label_pixel_changes": 0,
+                "spatial_shift_pixels": 0,
+                "min_adjacent_changed_pixels": min(adjacent_changed),
+                "loaded_bytes_with_static_sections": item["bytes"] + shared_static_bytes,
+            }
+        )
+    return {"status": "PASS", "decoded_motion": reports}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--rebuild', action='store_true')
-    parser.add_argument('--node', default=os.environ.get('PROFILE_NODE'))
+    parser.add_argument("--rebuild", action="store_true")
     args = parser.parse_args()
-    subprocess.run([sys.executable, str(ROOT/'scripts/verify_assets.py')], check=True,
-                   stdout=subprocess.PIPE, text=True)
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts/verify_assets.py")],
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
     report = verify()
     if args.rebuild:
-        with TemporaryDirectory(prefix='profile-motion-verify-') as tmp:
-            command = [sys.executable, str(ROOT/'scripts/build_motion.py'), '--output-dir', tmp]
-            if args.node:
-                command.extend(['--node', args.node])
-            subprocess.run(command, check=True, stdout=subprocess.PIPE, text=True)
-            for path in Path(tmp).iterdir():
-                assert path.read_bytes() == (ROOT/'assets'/path.name).read_bytes(), path.name
-        report['regeneration'] = 'byte-identical'
-    print(json.dumps(report, indent=2))
+        with TemporaryDirectory(prefix="nuwa-motion-verify-") as folder:
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/build_motion.py"),
+                    "--output-dir",
+                    folder,
+                ],
+                check=True,
+                stdout=subprocess.PIPE,
+                text=True,
+            )
+            for name in ("hero-motion.gif", "hero-mobile-motion.gif", "motion-manifest.json"):
+                assert (Path(folder) / name).read_bytes() == (ASSETS / name).read_bytes(), (
+                    f"Regenerate {name}"
+                )
+        report["regeneration"] = "byte-identical"
+    print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
